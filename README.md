@@ -9,7 +9,7 @@
 ## Установка
 
 ``` bash
-$ composer require baks-dev/ozon-manufacture
+composer require baks-dev/ozon-manufacture
 ```
 
 ## Дополнительно
@@ -17,22 +17,23 @@ $ composer require baks-dev/ozon-manufacture
 Установка конфигурации и файловых ресурсов:
 
 ``` bash
-$ php bin/console baks:assets:install
+php bin/console baks:assets:install
 ```
 
 Изменения в схеме базы данных с помощью миграции
 
 ``` bash
-$ php bin/console doctrine:migrations:diff
-$ php bin/console doctrine:migrations:migrate
+php bin/console doctrine:migrations:diff
+php bin/console doctrine:migrations:migrate
 ```
 
 ## Тестирование
 
 ``` bash
-$ php bin/phpunit --group=ozon-manufacture
+php bin/phpunit --group=ozon-manufacture
 ```
 
 ## Лицензия ![License](https://img.shields.io/badge/MIT-green)
 
 The MIT License (MIT). Обратитесь к [Файлу лицензии](LICENSE.md) за дополнительной информацией.
+
