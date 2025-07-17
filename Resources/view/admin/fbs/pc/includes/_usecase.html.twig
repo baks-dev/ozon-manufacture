@@ -1,0 +1,67 @@
+{# Пользовательское меню #}
+
+{% set random = random() %}
+
+<button class="btn btn-link btn-sm p-0"
+        id="usecase-{{ random }}"
+        data-bs-container="body"
+        data-bs-toggle="popover"
+        data-bs-placement="right"
+        data-bs-trigger="click"
+>
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+         fill="currentColor" class="text-muted"
+         viewBox="0 0 16 16">
+        <path fill-rule="evenodd"
+              d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+    </svg>
+</button>
+
+
+{# Чекбокс #}
+{# <label>
+	<input class="form-check-input ms-3 p-2" type="checkbox"
+#}{# onchange=checkedItem(); #}{#
+value="{{ item.event }}">
+</label> #}
+
+
+<div id="usecase-{{ random }}-content" class="d-none">
+    <ul class="leader list-group list-group-flush ">
+
+
+        {% if (is_granted('ROLE_MANUFACTURE_PART_NEW') or is_granted('ROLE_ADMIN')) %}
+
+            <li class="list-group-item d-flex justify-content-between bg-transparent border-0 text-truncate rounded-5">
+
+                {# <a href="{{ path('users-table:admin.action.delete', { id: item.event }) }}"
+				   class="text-decoration-none text-dark w-100 modal-link disabled"
+				   data-bs-toggle="modal"
+				   data-bs-target="#modal"
+				   title="{{ 'btn.delete'|trans({}, 'core.btn') }}">
+					Добавить партию производства
+				</a> #}
+
+
+                <a href="{{ path('manufacture-part:admin.newedit.new', {
+                    product: item.product,
+                    offer: item.offer,
+                    variation: item.variation,
+                    modification: item.modification,
+                }) }}"
+                   class="text-decoration-none text-dark w-100 modal-link disabled"
+                   title="На страницу товара WB"
+                   data-bs-toggle="modal"
+                   data-bs-target="#modal"
+                >
+                    Добавить партию производства
+                </a>
+            </li>
+
+        {% endif %}
+
+    </ul>
+</div>
+
+
+
