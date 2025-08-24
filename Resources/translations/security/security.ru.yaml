@@ -1,0 +1,23 @@
+# Роль
+
+ROLE_OZON_MANUFACTURE_FBS:
+  name: 'Производство FBS Ozon'
+  desc: 'Производство продукции на заказы Ozon'
+
+# Правила
+
+ROLE_OZON_MANUFACTURE_FBS_INDEX:
+  name: 'Просмотр'
+  desc: ''
+
+ROLE_OZON_MANUFACTURE_FBS_NEW:
+  name: 'Добавить'
+  desc: ''
+
+ROLE_OZON_MANUFACTURE_FBS_EDIT:
+  name: 'Редактировать'
+  desc: ''
+
+ROLE_OZON_MANUFACTURE_FBS_DELETE:
+  name: 'Удалить'
+  desc: ''

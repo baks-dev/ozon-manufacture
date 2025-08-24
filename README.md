@@ -9,6 +9,7 @@
 ## Установка
 
 ``` bash
+composer require baks-dev/ozon-package
 composer require baks-dev/ozon-manufacture
 ```
 

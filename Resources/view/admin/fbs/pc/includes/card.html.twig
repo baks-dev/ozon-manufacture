@@ -1,0 +1,295 @@
+{% set identifier = item.product %}
+
+{% if item.offer %}
+    {% set identifier = item.offer %}
+{% endif %}
+
+{% if item.variation %}
+    {% set identifier = item.variation %}
+{% endif %}
+
+{% if item.modification %}
+    {% set identifier = item.modification %}
+{% endif %}
+
+{% set product_offers = [] %}
+
+{% set dedline = date(item.order_data)|date_modify("+12 hours") %}
+{% set difference = dedline.diff(date("now")) %}
+{% set hour = difference.d * 24 + difference.h %}
+
+<div class="col-2 p-1" id="{{ identifier }}">
+
+    <div class="border-bottom border-4 rounded-4 bg-primary border-primary">
+
+        <div class="card bg-light-primary rounded-4">
+
+            <div class="card-body small p-2">
+
+                <div class="d-flex justify-content-between small">
+
+                    <div class="text-muted d-flex justify-content-between align-items-center  w-100">
+
+                        {# Добавление товаров в производственную партию #}
+                        {% if opens and (is_granted('ROLE_MANUFACTURE_PART_ADD') or is_granted('ROLE_ADMIN')) %}
+
+                        <div class="d-flex gap-2 align-items-center">
+
+                            {# Чекбокс для множественного добавления #}
+                            <div class="h5 mb-1">
+
+                                <input id="check-{{ identifier }}"
+                                       type="checkbox"
+                                       class="form-check-input add-all-to-production btn-outline-danger"
+
+                                        {# Данные, отправляемые POST #}
+                                       data-formname="{{ add_selected_product_form_name }}"
+                                       data-product="{{ item.product }}"
+                                       data-offer="{{ item.offer }}"
+                                       data-variation="{{ item.variation }}"
+                                       data-modification="{{ item.modification }}"
+                                       data-total="{{ item.order_total }}"
+                                       title="{{ item.exist_manufacture ? 'Продукция на производстве' : 'Выбрать данный товар' }}"
+                                        {{ item.exist_manufacture ? 'disabled' }}>
+                            </div>
+
+                            <label for="check-{{ identifier }}">
+
+                                {% endif %}
+
+                                {% if (dedline < date("now")) or (hour < 8) %}
+
+                                {% if dedline < date("now") %}
+
+                                <span class="badge bg-danger small p-1">Просрочен</span>
+
+                                {% if opens and (is_granted('ROLE_MANUFACTURE_PART_ADD') or  is_granted('ROLE_ADMIN')) %}
+                            </label>
+                        </div>
+
+                        {% endif %}
+
+                        <strong class="blink">
+                            {{ hour }} ч. {{ difference.i }} м.
+                        </strong>
+
+                        {% else %}
+                        <span class="badge bg-warning text-dark small p-1">
+                                Опоздание
+                            </span>
+
+                        {% if opens and (is_granted('ROLE_MANUFACTURE_PART_ADD') or  is_granted('ROLE_ADMIN')) %}
+                        </label>
+                    </div>
+                    {% endif %}
+
+
+                    <strong class="text-danger">
+                        {{ hour }} ч. {{ difference.i }} м.
+                    </strong>
+                    {% endif %}
+
+                    {% else %}
+
+                    <strong>Доставка:</strong>
+
+                    {% if opens and (is_granted('ROLE_MANUFACTURE_PART_ADD') or  is_granted('ROLE_ADMIN')) %}
+                    </label>
+                </div>
+                {% endif %}
+
+                <strong class="text-success">
+                    {{ hour }} ч. {{ difference.i }} м.
+                </strong>
+
+                {% endif %}
+
+            </div>
+        </div>
+
+    </div>
+
+    {# Обложка  #}
+
+    {% if item.product_image_ext is defined and item.product_image_ext is not null %}
+        {% set img_host =  item.product_image_cdn == true  ? CDN_HOST : '' %}
+        {% set img_dir = item.product_image %}
+        {% set img_file = (img_host is empty ? '/image.' : '/small.') ~ item.product_image_ext %}
+        {% set image_path = img_host ~ img_dir ~ img_file %}
+    {% endif %}
+
+    <div class="d-flex flex-column small gap-1 p-2 bg-cover lazy col-2 w-100 position-relative"
+         style="height: 200px;"
+         data-bg="{{ cdn_image_path(item.product_image, item.product_image_ext, item.product_image_cdn, 'medium') }}">
+
+        <div class="icon rounded-circle bg-contain p-1 mb-2 shadow position-absolute"
+             style="width: 25px; height: 25px;">
+
+            {{ include(_self|replace({ "card.html.twig": "_usecase.html.twig" })) }}
+        </div>
+
+        {# @TODO нет аналитики #}
+        {#        <form method="post" class="position-absolute bottom-0 end-0 p-1 d-flex gap-1"> #}
+        {#            <input type="hidden" name="search_form[query]" value="{{ item.card_article }}"> #}
+
+        {#            {% if item.analog is not null and item.order_total != item.analog %} #}
+        {#                <div class="btn-group" role="group" aria-label="Basic example"> #}
+
+        {#                    <button type="submit" #}
+        {#                            class="btn btn-primary btn-sm small m-0 text-decoration-none text-nowrap lh-normal fw-normal" #}
+        {#                            value="{{ item.card_article }}" #}
+        {#                            data-bs-toggle="tooltip" #}
+        {#                            data-bs-placement="bottom" #}
+        {#                            data-bs-delay='{"show":600,"hide":100}' #}
+        {#                            title='Количество аналогичных заказов' #}
+        {#                    > #}
+        {#                        <small>{{ item.analog }}</small> #}
+        {#                    </button> #}
+
+        {#                    {% if item.alarm %} #}
+        {#                        <button type="submit" #}
+        {#                                class="btn btn-danger btn-sm small m-0 text-decoration-none text-nowrap lh-normal fw-normal" #}
+        {#                                value="{{ item.card_article }}" #}
+        {#                                data-bs-toggle="tooltip" #}
+        {#                                data-bs-placement="bottom" #}
+        {#                                data-bs-delay='{"show":600,"hide":100}' #}
+        {#                                title='Количество горячих заказов' #}
+        {#                        > #}
+        {#                            <small>{{ item.alarm }}</small> #}
+        {#                        </button> #}
+        {#                    {% endif %} #}
+
+        {#                </div> #}
+        {#            {% endif %} #}
+        {#            #}
+        {#        </form> #}
+    </div>
+
+
+    <div class="card-body d-flex flex-column p-2">
+
+        <div class="text-truncate bg-contain"
+             role="tooltip"
+             data-bs-toggle="tooltip"
+             data-bs-placement="top"
+             data-bs-delay='{"show":600,"hide":100}'
+             title="{{ item.product_name }}">
+
+            <a href="{{ (is_granted('ROLE_PRODUCT_EDIT') or is_granted('ROLE_ADMIN')) ? path('products-product:admin.newedit.edit', { id: item.product }) : '#' }}"
+               class="fw-bolder mb-1 text-dark text-decoration-none">
+                {{ item.product_name|capitalize }}
+            </a>
+        </div>
+
+
+        <div class="text-muted fw-bolder">
+
+            {# Значение множественного варианта ТП #}
+            {{ item.product_variation_value|call_twig_func(item.product_variation_reference~'_render') ~
+            item.product_modification_value|call_twig_func(item.product_modification_reference~'_render') }}
+
+            {# Значение торгового предложения #}
+            {{ item.product_offer_value|call_twig_func(item.product_offer_reference~'_render') }}
+
+            {# Постфикс торгового предложения #}
+            {{ item.product_offer_postfix }}
+            {# Постфикс множественного варианта #}
+            {{ item.product_variation_postfix }}
+            {# Постфикс модификации #}
+            {{ item.product_modification_postfix }}
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center small">
+
+            <div class="d-flex align-items-center gap-1 text-primary pointer copy small"
+                 data-copy="{{ item.product_article }}">
+
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="14"
+                     height="14" fill="currentColor" viewBox="0 0 115.77 122.88">
+                    <path d="M89.62,13.96v7.73h12.19h0.01v0.02c3.85,0.01,7.34,1.57,9.86,4.1c2.5,2.51,4.06,5.98,4.07,9.82h0.02v0.02 v73.27v0.01h-0.02c-0.01,3.84-1.57,7.33-4.1,9.86c-2.51,2.5-5.98,4.06-9.82,4.07v0.02h-0.02h-61.7H40.1v-0.02 c-3.84-0.01-7.34-1.57-9.86-4.1c-2.5-2.51-4.06-5.98-4.07-9.82h-0.02v-0.02V92.51H13.96h-0.01v-0.02c-3.84-0.01-7.34-1.57-9.86-4.1 c-2.5-2.51-4.06-5.98-4.07-9.82H0v-0.02V13.96v-0.01h0.02c0.01-3.85,1.58-7.34,4.1-9.86c2.51-2.5,5.98-4.06,9.82-4.07V0h0.02h61.7 h0.01v0.02c3.85,0.01,7.34,1.57,9.86,4.1c2.5,2.51,4.06,5.98,4.07,9.82h0.02V13.96L89.62,13.96z M79.04,21.69v-7.73v-0.02h0.02 c0-0.91-0.39-1.75-1.01-2.37c-0.61-0.61-1.46-1-2.37-1v0.02h-0.01h-61.7h-0.02v-0.02c-0.91,0-1.75,0.39-2.37,1.01 c-0.61,0.61-1,1.46-1,2.37h0.02v0.01v64.59v0.02h-0.02c0,0.91,0.39,1.75,1.01,2.37c0.61,0.61,1.46,1,2.37,1v-0.02h0.01h12.19V35.65 v-0.01h0.02c0.01-3.85,1.58-7.34,4.1-9.86c2.51-2.5,5.98-4.06,9.82-4.07v-0.02h0.02H79.04L79.04,21.69z M105.18,108.92V35.65v-0.02 h0.02c0-0.91-0.39-1.75-1.01-2.37c-0.61-0.61-1.46-1-2.37-1v0.02h-0.01h-61.7h-0.02v-0.02c-0.91,0-1.75,0.39-2.37,1.01 c-0.61,0.61-1,1.46-1,2.37h0.02v0.01v73.27v0.02h-0.02c0,0.91,0.39,1.75,1.01,2.37c0.61,0.61,1.46,1,2.37,1v-0.02h0.01h61.7h0.02 v0.02c0.91,0,1.75-0.39,2.37-1.01c0.61-0.61,1-1.46,1-2.37h-0.02V108.92L105.18,108.92z"></path>
+                </svg>
+
+                {{ item.product_article }}
+            </div>
+
+        </div>
+
+        <div class="d-flex align-items-center justify-content-between">
+
+            <div>
+                <span>Количество: &nbsp;</span>
+                <strong>{{ item.order_total }}</strong> шт.
+            </div>
+
+
+            {% if is_granted('ROLE_MANUFACTURE_PART_ADD') or  is_granted('ROLE_ADMIN') %}
+
+                {% if opens %}
+                    <span role="tooltip"
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="bottom"
+                          data-bs-delay='{"show":600,"hide":100}'
+                          title='{{ item.exist_manufacture ? 'Продукция на производстве '~ item.exist_manufacture : 'Добавить в партию производства' }}'>
+
+                          <button data-href="{{ path('manufacture-part:admin.selected-products.add') }}"
+                                  class="btn btn-sm {{ item.exist_manufacture ? 'btn-secondary' : 'btn-primary' }} modal-link disabled"
+
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#modal"
+                                  data-method="post"
+                                  data-formname="{{ add_selected_product_form_name }}"
+                                  data-product="{{ item.product }}"
+                                  data-offer="{{ item.offer }}"
+                                  data-variation="{{ item.variation }}"
+                                  data-modification="{{ item.modification }}"
+                                  data-collection-form="product_form_data" {# name коллекции из DTO #}
+                                  data-post-class="add-one-to-collection"  {# признак одного элемента #}
+                                  data-total="{{ item.order_total }}">
+
+                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+                                   class="bi bi-folder-plus" viewBox="0 0 16 16">
+                                <path d="m.5 3 .04.87a1.99 1.99 0 0 0-.342 1.311l.637 7A2 2 0 0 0 2.826 14H9v-1H2.826a1 1 0 0 1-.995-.91l-.637-7A1 1 0 0 1 2.19 4h11.62a1 1 0 0 1 .996 1.09L14.54 8h1.005l.256-2.819A2 2 0 0 0 13.81 3H9.828a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 6.172 1H2.5a2 2 0 0 0-2 2Zm5.672-1a1 1 0 0 1 .707.293L7.586 3H2.19c-.24 0-.47.042-.683.12L1.5 2.98a1 1 0 0 1 1-.98h3.672Z"/>
+                                <path d="M13.5 9a.5.5 0 0 1 .5.5V11h1.5a.5.5 0 1 1 0 1H14v1.5a.5.5 0 1 1-1 0V12h-1.5a.5.5 0 0 1 0-1H13V9.5a.5.5 0 0 1 .5-.5Z"/>
+                              </svg>
+
+                        </button>
+
+                    </span>
+                {% else %}
+
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MANUFACTURE_PART_NEW') %}
+                        <span
+                                role="tooltip"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"
+                                data-bs-delay='{"show":600,"hide":100}'
+                                title='Открыть производственную партию'
+                        >
+                                    <a href="{{ path('manufacture-part:admin.newedit.new') }}"
+                                       class="btn btn-sm modal-btn modal-link disabled  text-nowrap"
+                                       data-bs-toggle="modal"
+                                       data-bs-target="#modal"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                             fill="currentColor"
+                                             class="bi bi-folder-plus" viewBox="0 0 16 16">
+                                            <path d="m.5 3 .04.87a1.99 1.99 0 0 0-.342 1.311l.637 7A2 2 0 0 0 2.826 14H9v-1H2.826a1 1 0 0 1-.995-.91l-.637-7A1 1 0 0 1 2.19 4h11.62a1 1 0 0 1 .996 1.09L14.54 8h1.005l.256-2.819A2 2 0 0 0 13.81 3H9.828a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 6.172 1H2.5a2 2 0 0 0-2 2Zm5.672-1a1 1 0 0 1 .707.293L7.586 3H2.19c-.24 0-.47.042-.683.12L1.5 2.98a1 1 0 0 1 1-.98h3.672Z"/>
+                                            <path d="M13.5 9a.5.5 0 0 1 .5.5V11h1.5a.5.5 0 1 1 0 1H14v1.5a.5.5 0 1 1-1 0V12h-1.5a.5.5 0 0 1 0-1H13V9.5a.5.5 0 0 1 .5-.5Z"/>
+                                        </svg>
+
+                                    </a>
+                                </span>
+                    {% endif %}
+
+                {% endif %}
+
+
+            {% endif %}
+        </div>
+
+
+    </div>
+</div>
+</div>
+
+</div>

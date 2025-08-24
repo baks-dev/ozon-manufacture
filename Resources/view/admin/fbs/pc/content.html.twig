@@ -1,0 +1,190 @@
+{% trans_default_domain('admin.ozon.manufacture') %}
+
+
+<main class="main d-print-none ">
+
+    <section class="container px-4 mb-5">
+
+        <div class="mt-3 d-flex justify-content-between">
+            {{ include(_self|replace({ "content.html.twig": "includes/_breadcrumb.html.twig" })) }}
+        </div>
+
+        {# Панель с кнопками #}
+        <div class="d-flex justify-content-between align-items-center mb-3 gap-3">
+
+            <div class="w-100">
+                <h1 class="h4 text-uppercase fw-bolder mb-0">
+                    Производство на заказы Ozon (FBS)
+                </h1>
+            </div>
+
+            <a href="{{ path('ozon-package:admin.package.index') }}"
+               class="btn btn-light "
+               role="tooltip"
+               data-bs-toggle="tooltip"
+               data-bs-placement="bottom"
+               data-bs-delay='{"show":600,"hide":100}'
+               title="Упаковка заказов Ozon">
+
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                     class="bi bi-box-seam" viewBox="0 0 16 16">
+                    <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2zm3.564 1.426L5.596 5 8 5.961 14.154 3.5zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464z"/>
+                </svg>
+            </a>
+
+            <button {# href="{{ path('products-stocks:admin.purchase.index') }}" #}
+                    class="btn btn-light opacity-25"
+                    role="tooltip"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom"
+                    data-bs-delay='{"show":600,"hide":100}'
+                    title="Производство на заказы Ozon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-boxes"
+                     viewBox="0 0 16 16">
+                    <path d="M7.752.066a.5.5 0 0 1 .496 0l3.75 2.143a.5.5 0 0 1 .252.434v3.995l3.498 2A.5.5 0 0 1 16 9.07v4.286a.5.5 0 0 1-.252.434l-3.75 2.143a.5.5 0 0 1-.496 0l-3.502-2-3.502 2.001a.5.5 0 0 1-.496 0l-3.75-2.143A.5.5 0 0 1 0 13.357V9.071a.5.5 0 0 1 .252-.434L3.75 6.638V2.643a.5.5 0 0 1 .252-.434L7.752.066ZM4.25 7.504 1.508 9.071l2.742 1.567 2.742-1.567L4.25 7.504ZM7.5 9.933l-2.75 1.571v3.134l2.75-1.571V9.933Zm1 3.134 2.75 1.571v-3.134L8.5 9.933v3.134Zm.508-3.996 2.742 1.567 2.742-1.567-2.742-1.567-2.742 1.567Zm2.242-2.433V3.504L8.5 5.076V8.21l2.75-1.572ZM7.5 8.21V5.076L4.75 3.504v3.134L7.5 8.21ZM5.258 2.643 8 4.21l2.742-1.567L8 1.076 5.258 2.643ZM15 9.933l-2.75 1.571v3.134L15 13.067V9.933ZM3.75 14.638v-3.134L1 9.933v3.134l2.75 1.571Z"/>
+                </svg>
+            </button>
+
+            <a href="{{ path('manufacture-part:admin.manufacture') }}"
+               class="btn btn-light"
+               role="tooltip"
+               data-bs-toggle="tooltip"
+               data-bs-placement="bottom"
+               data-bs-delay='{"show":600,"hide":100}'
+               title="Список производственных партий">
+
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                     class="bi bi-card-checklist" viewBox="0 0 16 16">
+                    <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+                    <path d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0zM7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
+                </svg>
+            </a>
+
+        </div>
+
+        {# Управление производственной партией #}
+        {% if opens %}
+
+            {# Производственная партия #}
+            {{ include('@manufacture-part/admin/index/pc/part.html.twig', { card: opens} ) }}
+
+        {% else %}
+
+            <div class="alert alert-secondary d-flex justify-content-between align-items-center" role="alert">
+                <span>
+                    У Вас нет  открытых производственных партий
+                </span>
+
+                <a href="{{ path('manufacture-part:admin.newedit.new') }}"
+                   class="btn modal-btn modal-link disabled btn-primary text-nowrap" data-bs-toggle="modal"
+                   data-bs-target="#modal"
+                   title="Открыть производственную партию">
+                    Открыть новую партию
+                </a>
+            </div>
+
+        {% endif %}
+
+
+        <div class="d-flex justify-content-between align-items-center mb-3 gap-3">
+
+            <div class="w-100">
+                <h2 class="h5 text-uppercase fw-bolder mb-0">
+                    заказы ozon marketplace
+                </h2>
+            </div>
+
+        </div>
+
+        <div class="border  border-light rounded-4 p-3 mb-3">
+
+            <div class="d-flex justify-content-between">
+
+                {% include Template('@core:/_includes/'~baks_settings.device~'/search.html.twig') %}
+
+                <div class="w-100">
+
+                    {# Фильтр по продукции #}
+                    <div class="w-100">
+                        {% include Template('@products-product/admin/filter/'~baks_settings.device~'/filter.html.twig') %}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="row cards-box-body mt-3">
+
+                {# Текстовый результат фильтра #}
+                {% include Template('@products-product/filter/'~baks_settings.device~'/filter_text.html.twig') %}
+
+                {# Карточки с заказами Ozon #}
+                {% for item in query.data %}
+
+                    {{ include(_self|replace({ "content.html.twig": "includes/card.html.twig" })) }}
+
+                {% else %}
+
+                    <div class="alert alert-warning m-3 w-100" role="alert">
+                        <div class="d-flex align-items-baseline gap-3">
+
+                            <div>
+                                <div class="icon rounded-circle bg-contain p-2 bg-primary text-white"
+                                     style="width: 10px; height: 10px;"><span class="small">!</span></div>
+                            </div>
+
+                            <div class="small lh-1">
+                                Информация по данному запросу отсутствует
+                            </div>
+                        </div>
+                    </div>
+
+                {% endfor %}
+            </div>
+
+        </div>
+
+
+        {# Множественный выбор заказов #}
+        {% if opens and query.data %}
+
+            <div class="position-absolute mt-2 pt-1 small">
+                <strong class="">Множественный выбор:</strong>
+            </div>
+
+            <div class="to-production-actions d-flex gap-2 sticky-bottom ps-5 pb-3 pt-2" style="margin-left: 180px;">
+
+                <button class="btn btn-sm btn-outline-primary text-nowrap mb-2"
+                        role="tooltip"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="bottom"
+                        data-bs-delay='{"show":600,"hide":100}'
+                        title="Выбрать все"
+                        id="select-all-to-production">
+                    Выбрать все
+
+                </button>
+
+                <a class="btn btn-sm btn-danger opacity-75 text-nowrap mb-2 d-none"
+                   role="tooltip"
+                   data-bs-placement="bottom"
+                   data-bs-delay='{"show":600,"hide":100}'
+                   title="Добавить выбранные"
+                   id="add-all-to-production"
+                   data-bs-toggle="modal"
+                   data-bs-target="#modal"
+                   data-post-class="add-all-to-production"
+                   data-method="post"
+                   data-collection-form="product_form_data"
+                   href="/admin/manufacture/part/selected-product/add">
+                    Добавить выбранные
+                </a>
+
+            </div>
+        {% endif %}
+
+        {% include Template('_includes/'~baks_settings.device~'/pagination.html.twig') with { 'pagination' : query } %}
+
+    </section>
+
+</main>
