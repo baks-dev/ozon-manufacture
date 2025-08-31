@@ -23,10 +23,10 @@
   ],
   "require": {
     "php": ">=8.4",
-    "baks-dev/core": "^7.2",
-    "baks-dev/manufacture-part": "^7.2",
-    "baks-dev/ozon-package": "^7.2",
-    "baks-dev/ozon-orders": "^7.2"
+    "baks-dev/core": "^7.3",
+    "baks-dev/manufacture-part": "^7.3",
+    "baks-dev/ozon-package": "^7.3",
+    "baks-dev/ozon-orders": "^7.3"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest"

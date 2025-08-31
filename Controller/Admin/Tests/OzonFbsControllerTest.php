@@ -31,9 +31,6 @@ use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group ozon-manufacture
- */
 #[Group('ozon-manufacture')]
 #[When(env: 'test')]
 final class OzonFbsControllerTest extends WebTestCase

@@ -39,9 +39,6 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DependencyInjection\Attribute\When;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-/**
- * @group ozon-manufacture
- */
 #[Group('ozon-manufacture')]
 #[When(env: 'test')]
 class OpenOzonSupplyWhenManufacturePartCompletedDebugTest extends KernelTestCase

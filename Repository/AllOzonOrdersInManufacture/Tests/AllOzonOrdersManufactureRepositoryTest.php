@@ -29,9 +29,6 @@ use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group ozon-manufacture
- */
 #[Group('ozon-manufacture')]
 #[When(env: 'test')]
 class AllOzonOrdersManufactureRepositoryTest extends KernelTestCase
