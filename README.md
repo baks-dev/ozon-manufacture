@@ -1,6 +1,6 @@
 # BaksDev Ozon Manufacture
 
-[![Version](https://img.shields.io/badge/version-7.3.0-blue)](https://github.com/baks-dev/ozon-manufacture/releases)
+[![Version](https://img.shields.io/badge/version-7.3.1-blue)](https://github.com/baks-dev/ozon-manufacture/releases)
 ![php 8.4+](https://img.shields.io/badge/php-min%208.4-red.svg)
 [![packagist](https://img.shields.io/badge/packagist-green)](https://packagist.org/packages/baks-dev/ozon-manufacture)
 
