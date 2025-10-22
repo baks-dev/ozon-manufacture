@@ -54,19 +54,24 @@ class OpenOzonSupplyWhenManufacturePartCompletedDebugTest extends KernelTestCase
         $OpenOzonSupplyWhenManufacturePartCompletedDispatcher = self::getContainer()->get(OpenOzonSupplyWhenManufacturePartCompletedDispatcher::class);
 
         self::assertTrue(true);
-        return;
 
         /** @var EntityManagerInterface $em */
         $em = self::getContainer()->get(EntityManagerInterface::class);
 
         /** @var ManufacturePart|null $manufacturePart */
-        $manufacturePart = $em->getRepository(ManufacturePart::class)->find('0198bef6-158a-7124-bc69-047b0408265e');
+        $manufacturePart = $em
+            ->getRepository(ManufacturePart::class)
+            ->find('5dd1dbaf-72ee-7ed4-b733-6f485a3d8c38');
 
-        $ManufacturePartMessage = new ManufacturePartMessage(
-            $manufacturePart->getId(),
-            $manufacturePart->getEvent(),
-        );
+        if($manufacturePart instanceof ManufacturePart)
+        {
+            $ManufacturePartMessage = new ManufacturePartMessage(
+                $manufacturePart->getId(),
+                $manufacturePart->getEvent(),
+            );
 
-        $OpenOzonSupplyWhenManufacturePartCompletedDispatcher($ManufacturePartMessage);
+            $OpenOzonSupplyWhenManufacturePartCompletedDispatcher($ManufacturePartMessage);
+        }
+
     }
 }
