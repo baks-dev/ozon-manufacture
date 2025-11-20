@@ -75,9 +75,9 @@ final readonly class OpenOzonSupplyWhenManufacturePartCompletedDispatcher
 
         if(false === ($ManufacturePartEvent instanceof ManufacturePartEvent))
         {
-            $this->Logger->critical(
+            $this->Logger->error(
                 'manufacture-part: ManufacturePartEvent не определено',
-                [$message, self::class.':'.__LINE__]
+                [var_export($message, true), self::class.':'.__LINE__],
             );
 
             return;
