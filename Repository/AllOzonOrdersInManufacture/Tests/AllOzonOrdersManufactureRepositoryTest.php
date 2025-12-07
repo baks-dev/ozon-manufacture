@@ -25,6 +25,7 @@
 namespace BaksDev\Ozon\Manufacture\Repository\AllOzonOrdersInManufacture\Tests;
 
 use BaksDev\Ozon\Manufacture\Repository\AllOzonOrdersInManufacture\AllOzonOrdersInManufactureInterface;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
@@ -39,8 +40,10 @@ class AllOzonOrdersManufactureRepositoryTest extends KernelTestCase
         $AllOzonOrdersManufactureInterface = self::getContainer()->get(AllOzonOrdersInManufactureInterface::class);
 
         $results = $AllOzonOrdersManufactureInterface
-            ->profile($_SERVER['TEST_PROFILE'])
+            ->profile(new UserProfileUid($_SERVER['TEST_PROFILE'] ?? UserProfileUid::TEST))
             ->findPaginator(false);
+
+        $results->getData();
 
         self::assertTrue(true);
     }
