@@ -104,6 +104,7 @@ final readonly class AddOrdersToOzonPackageWhenManufacturePartCompletedDispatche
             false === $ManufacturePartEvent->equalsManufacturePartComplete(TypeDeliveryFbsOzon::class)
         )
         {
+            $Deduplicator->save();
             return false;
         }
 
