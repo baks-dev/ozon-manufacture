@@ -34,7 +34,7 @@ use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
- * Сбрасывает кэш модуля orders-order
+ * Сбрасывает кэш модуля ozon-manufacture
  */
 #[AsMessageHandler(priority: -100)]
 final readonly class OzonOrdersOrderCacheClearHandler
