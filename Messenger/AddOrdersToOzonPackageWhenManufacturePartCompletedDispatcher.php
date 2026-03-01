@@ -50,12 +50,14 @@ use BaksDev\Ozon\Package\UseCase\Package\Pack\Orders\OzonPackageOrderDTO;
 use BaksDev\Ozon\Package\UseCase\Package\Pack\OzonPackageDTO;
 use BaksDev\Ozon\Package\UseCase\Package\Pack\OzonPackageHandler;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
  * Метод добавляет заказы Ozon в ОТКРЫТУЮ поставку при ВЫПОЛНЕННОЙ производственной парии Ozon Fbs
  */
+#[Autoconfigure(public: true)]
 #[AsMessageHandler(priority: 10)]
 final readonly class AddOrdersToOzonPackageWhenManufacturePartCompletedDispatcher
 {

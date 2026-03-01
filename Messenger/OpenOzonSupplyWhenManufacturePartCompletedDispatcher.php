@@ -40,12 +40,14 @@ use BaksDev\Ozon\Package\Repository\Supply\ExistOpenOzonSupplyProfile\ExistOzonS
 use BaksDev\Ozon\Package\UseCase\Supply\New\OzonSupplyNewDTO;
 use BaksDev\Ozon\Package\UseCase\Supply\New\OzonSupplyNewHandler;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
  * Открывает новую поставку OzonSupply: - выполняется завершающий этап производства; - заказ имеет доставку Ozon FBS
  */
+#[Autoconfigure(public: true)]
 #[AsMessageHandler(priority: 80)]
 final readonly class OpenOzonSupplyWhenManufacturePartCompletedDispatcher
 {
