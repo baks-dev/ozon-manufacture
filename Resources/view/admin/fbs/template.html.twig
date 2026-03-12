@@ -52,136 +52,25 @@
 {% endblock %}
 
 {% block javascript %}
+
 <script nonce='{{ csp_nonce() }}' async data-src="/assets/{{ version }}/js/copy.min.js?v={{ version }}" class="lazy"></script>
 <script nonce='{{ csp_nonce() }}' async data-src='/assets/{{ version }}/plugins/nice-select2/nice-select2.min.js?v={{ version }}' class='lazy'></script>
 <script nonce='{{ csp_nonce() }}' async data-src="/assets/{{ version }}/products-product/filter.min.js?v={{ version }}" class="lazy"></script>
-<script nonce='{{ csp_nonce() }}' async data-src="/assets/{{ version }}/centrifugo/centrifuge.min.js?v={{ version }}" class='lazy'></script>
-<script nonce='{{ csp_nonce() }}' async data-src="/assets/{{ version }}/centrifugo/socket.min.js?v={{ version }}" class='lazy'></script>
 <script nonce='{{ csp_nonce() }}' async data-src="/assets/{{ version }}/js/print.min.js?v={{ version }}" class="lazy"></script>
 
+<script nonce='{{ csp_nonce() }}' async data-src="/assets/{{ version }}/centrifugo/centrifuge.min.js?v={{ version }}" class='lazy'></script>
+<script nonce='{{ csp_nonce() }}' async data-src="/assets/{{ version }}/centrifugo/socket.min.js?v={{ version }}" class='lazy'></script>
+
+
 <script nonce="{{ csp_nonce() }}">
-    // window.debug = true;
+     //window.debug = true;
     window.centrifugo_dsn = "{{ centrifugo_dsn }}";
     window.centrifugo_token = "{{ token }}";
+    window.current_profile = "{{ current_profile }}";
+    window.manufacture_part_event = "{{ opens != false ? opens.manufacturePartEvent : 'null' }}";
 </script>
 
-<script nonce="{{ csp_nonce() }}">
-
-/** Сокеты */
-
-let KuKutdEba = 100;
-
-setTimeout(function SpgGHaQzun()
-{
-    if(typeof centrifuge !== "object")
-    {
-        if(KuKutdEba > 1000) { return; }
-
-        KuKutdEba = KuKutdEba * 2;
-        return setTimeout(SpgGHaQzun, KuKutdEba);
-    }
-
-		{% if opens %}
-
-			  centrifuge.newSubscription('{{ opens.manufacturePartEvent }}').on("publication", function (ctx) {
-                    document.getElementById('product-{{ opens.manufacturePartEvent }}').innerHTML = ctx.data.product;
-
-                    let $total = parseInt(document.getElementById('total-{{ opens.manufacturePartEvent }}').textContent);
-                    document.getElementById('total-{{ opens.manufacturePartEvent }}').textContent = $total + ctx.data.total;
-
-            }).subscribe();
-
-		{% endif %}
-
-        /** Удаляем из списка у всех продукт */
-        centrifuge.newSubscription("remove").on("publication", function (ctx)
-        {
-            if(ctx.data.profile === '{{ current_profile }}')
-            {
-                return;
-            }
-
-            let $identifier = document.getElementById(ctx.data.identifier);
-
-            if($identifier)
-            {
-                $identifier.remove();
-            }
-
-        }).subscribe();
-
-
-
-}, 100);
-
-
-/** Обработчики кнопок выбора товаров */
-var select_all_to_production = document.querySelector("#select-all-to-production");
-var add_all_to_production = document.querySelector("#add-all-to-production");
-
-/** Выбор из списка ответов */
-select_all_to_production?.addEventListener("click", function() {
-
-    // Выбрать все
-    select_all_to_production.classList.toggle("selected");
-
-    //const button_text = select_all_to_production.classList.contains("selected") ? "Снять выбор" : "Выбрать все";
-    //select_all_to_production.innerText = button_text;
-
-    if(select_all_to_production.classList.contains("selected"))
-        {
-            select_all_to_production.innerText = "Снять выбор";
-            select_all_to_production.classList.remove("btn-outline-primary");
-            select_all_to_production.classList.add("btn-primary");
-        }
-    else
-
-       {
-           select_all_to_production.innerText = "Выбрать все";
-           select_all_to_production.classList.add("btn-outline-primary");
-           select_all_to_production.classList.remove("btn-primary");
-       }
-
-
-    const products = document.querySelectorAll(".add-all-to-production");
-
-    // Выбрать все НЕ disabled (т.е. те, которые не на производстве)
-    products.forEach(checkbox => {if (!checkbox.disabled) { checkbox.checked = select_all_to_production.classList.contains("selected");} } );
-
-    const checkboxes = document.querySelectorAll(".add-all-to-production");
-    const atLeastOneChecked = Array.from(checkboxes).some(cb => cb.checked);
-
-    if (atLeastOneChecked) {
-        add_all_to_production.classList.remove("d-none");
-    }
-    else {
-        add_all_to_production.classList.add("d-none");
-    }
-
-});
-
-var checkboxs_all_to_production = document.querySelectorAll(".add-all-to-production");
-
-/** Скрыть или показать кнопку "Добавить выбранные" */
-for (checkbox_all_to_production of checkboxs_all_to_production) {
-
-    checkbox_all_to_production?.addEventListener("click", function() {
-
-        const checkboxes = document.querySelectorAll(".add-all-to-production");
-        const atLeastOneChecked = Array.from(checkboxes).some(cb => cb.checked);
-
-        if (atLeastOneChecked) {
-           add_all_to_production.classList.remove("d-none");
-        }
-        else {
-            add_all_to_production.classList.add("d-none");
-        }
-
-    });
-}
-
-
-</script>
-
+<script nonce='{{ csp_nonce() }}' async data-src="/assets/{{ version }}/ozon-manufacture/multi-select.min.js?v={{ version }}" class="lazy"></script>
+<script nonce='{{ csp_nonce() }}' async data-src="/assets/{{ version }}/ozon-manufacture/sockets.min.js?v={{ version }}" class="lazy"></script>
 
 {% endblock %}

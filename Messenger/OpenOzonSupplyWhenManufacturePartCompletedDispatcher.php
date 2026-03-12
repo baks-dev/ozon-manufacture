@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -45,7 +45,7 @@ use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
- * Открывает новую поставку OzonSupply: - выполняется завершающий этап производства; - заказ имеет доставку Ozon FBS
+ * Открывает новую поставку OzonSupply при выполнении условий: 1. выполняется завершающий этап производства; 2. заказ имеет доставку Ozon FBS;
  */
 // #[Autoconfigure(public: true)]
 #[AsMessageHandler(priority: 80)]
@@ -92,12 +92,14 @@ final readonly class OpenOzonSupplyWhenManufacturePartCompletedDispatcher
          * - DeliveryUid -> TypeDeliveryFbsOzon
          */
 
-        if(false === $ManufacturePartEvent->equalsManufacturePartStatus(ManufacturePartStatusCompleted::class))
+        if(false === $ManufacturePartEvent->equalsManufacturePartComplete(TypeDeliveryFbsOzon::class))
         {
+            /** Исключаем повторную обработку производственной партии не с типом Ozon Fbs */
+            $Deduplicator->save();
             return;
         }
 
-        if(false === $ManufacturePartEvent->equalsManufacturePartComplete(TypeDeliveryFbsOzon::class))
+        if(false === $ManufacturePartEvent->equalsManufacturePartStatus(ManufacturePartStatusCompleted::class))
         {
             return;
         }
@@ -141,6 +143,14 @@ final readonly class OpenOzonSupplyWhenManufacturePartCompletedDispatcher
 
             return;
         }
+
+        $this->Logger->info(
+            sprintf('%s Открыта новая поставка Ozon', $OzonSupplyNewDTO->getIdentifier()->getIdentifier()),
+            [
+                var_export($OzonSupply, true),
+                self::class.':'.__LINE__
+            ]
+        );
 
         $Deduplicator->save();
     }

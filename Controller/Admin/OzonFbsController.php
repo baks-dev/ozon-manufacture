@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -59,18 +59,16 @@ final class OzonFbsController extends AbstractController
         int $page = 0,
     ): Response
     {
-        $search = new SearchDTO();
-
         $searchForm = $this
             ->createForm(
                 type: SearchForm::class,
-                data: $search,
+                data: $search = new SearchDTO(),
                 options: ['action' => $this->generateUrl('ozon-manufacture:admin.fbs'),]
             )
             ->handleRequest($request);
 
         /**
-         * Получаем активную открытую поставку ответственного (Независимо от авторизации)
+         * Получаем информацию об открытой производственной партии
          */
         $opens = $openManufacturePartRepository
             ->forFixed($this->getCurrentProfileUid())
@@ -83,7 +81,7 @@ final class OzonFbsController extends AbstractController
 
         if($opens instanceof OpenManufacturePartResult)
         {
-            /** Если открыт производственный процесс - жестко указываем категорию и скрываем выбор */
+            /** Если открыт производственный процесс - указываем категорию и скрываем выбор */
             $filter->setCategory(new CategoryProductUid($opens->getCategoryId(), $opens->getCategoryName()));
             $filter->categoryInvisible();
         }
@@ -97,7 +95,7 @@ final class OzonFbsController extends AbstractController
             ->handleRequest($request);
 
         /**
-         * Получаем список заказов
+         * Получаем список продукции из заказов для добавления в производственную партию
          */
         $ozonOrders = $allOzonOrdersManufactureRepository
             ->search($search)
