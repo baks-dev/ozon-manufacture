@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -55,7 +55,7 @@ use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
- * Метод добавляет заказы Ozon в ОТКРЫТУЮ поставку при ВЫПОЛНЕННОЙ производственной парии Ozon Fbs
+ * Добавляем заказы Ozon в ОТКРЫТУЮ поставку при ВЫПОЛНЕННОЙ производственной парии Ozon Fbs
  */
 // #[Autoconfigure(public: true)]
 #[AsMessageHandler(priority: 10)]
@@ -65,13 +65,13 @@ final readonly class AddOrdersToOzonPackageWhenManufacturePartCompletedDispatche
         #[Target('ozonManufactureLogger')] private LoggerInterface $logger,
         private CentrifugoPublishInterface $CentrifugoPublish,
         private DeduplicatorInterface $Deduplicator,
+        private OzonPackageHandler $OzonPackageHandler,
         private ManufacturePartInvariableInterface $ManufacturePartInvariableRepository,
         private ManufacturePartCurrentEventInterface $ManufacturePartCurrentEventRepository,
         private CurrentOrderEventInterface $CurrentOrderEventRepository,
         private ExistOzonSupplyInterface $ExistOzonSupplyRepository,
         private ExistOrderInOzonPackageInterface $ExistOrderPackageRepository,
         private OpenOzonSupplyIdentifierInterface $OpenOzonSupplyIdentifierRepository,
-        private OzonPackageHandler $OzonPackageHandler,
     ) {}
 
     public function __invoke(ManufacturePartMessage $message): bool
@@ -92,7 +92,7 @@ final readonly class AddOrdersToOzonPackageWhenManufacturePartCompletedDispatche
 
         if(false === ($ManufacturePartEvent instanceof ManufacturePartEvent))
         {
-            $this->logger->error(
+            $this->logger->critical(
                 'ozon-manufacture: ManufacturePartEvent не определено',
                 [var_export($message, true), self::class.':'.__LINE__],
             );
@@ -100,13 +100,22 @@ final readonly class AddOrdersToOzonPackageWhenManufacturePartCompletedDispatche
             return false;
         }
 
-        if(
-            false === $ManufacturePartEvent->equalsManufacturePartStatus(ManufacturePartStatusCompleted::class)
-            ||
-            false === $ManufacturePartEvent->equalsManufacturePartComplete(TypeDeliveryFbsOzon::class)
-        )
+        /**
+         * Обрабатываем, если:
+         *
+         * - ManufacturePartStatus -> ManufacturePartStatusCompleted
+         * - DeliveryUid -> TypeDeliveryFbsOzon
+         */
+
+        if(false === $ManufacturePartEvent->equalsManufacturePartComplete(TypeDeliveryFbsOzon::class))
         {
+            /** Исключаем повторную обработку производственной партии не с типом Ozon Fbs */
             $Deduplicator->save();
+            return false;
+        }
+
+        if(false === $ManufacturePartEvent->equalsManufacturePartStatus(ManufacturePartStatusCompleted::class))
+        {
             return false;
         }
 
@@ -228,7 +237,6 @@ final readonly class AddOrdersToOzonPackageWhenManufacturePartCompletedDispatche
                     if(
                         true === $this->ExistOrderPackageRepository
                             ->forOrder($OrderEvent->getMain())
-                            ->forOrderProduct($ordProduct->getId())
                             ->isExist()
                     )
                     {

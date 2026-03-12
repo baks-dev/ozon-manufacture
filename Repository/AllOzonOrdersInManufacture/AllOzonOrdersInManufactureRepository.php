@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -64,7 +64,6 @@ use BaksDev\Products\Product\Entity\Offers\Variation\ProductVariation;
 use BaksDev\Products\Product\Entity\Photo\ProductPhoto;
 use BaksDev\Products\Product\Entity\Trans\ProductTrans;
 use BaksDev\Products\Product\Forms\ProductFilter\Admin\ProductFilterDTO;
-use BaksDev\Products\Stocks\Entity\Total\ProductStockTotal;
 use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
 use BaksDev\Users\Profile\UserProfile\Repository\UserProfileTokenStorage\UserProfileTokenStorageInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
@@ -113,6 +112,9 @@ final class AllOzonOrdersInManufactureRepository implements AllOzonOrdersInManuf
         return $this;
     }
 
+    /**
+     * Список заказов Ozon для добавления в производственную партию
+     */
     public function findPaginator(DeliveryUid|false $part): PaginatorInterface
     {
         $dbal = $this->DBALQueryBuilder
@@ -120,17 +122,17 @@ final class AllOzonOrdersInManufactureRepository implements AllOzonOrdersInManuf
             ->bindLocal();
 
         $dbal
-            ->from(OrderInvariable::class, 'invariable');
+            ->from(OrderInvariable::class, 'orders_invariable');
 
         $dbal->join(
-            'invariable',
+            'orders_invariable',
             Order::class,
             'orders',
-            'orders.id = invariable.main',
+            'orders.id = orders_invariable.main',
         );
 
         $dbal->join(
-            'invariable',
+            'orders_invariable',
             OrderEvent::class,
             'event',
             'event.id = orders.event AND event.status = :status',
@@ -171,7 +173,7 @@ final class AllOzonOrdersInManufactureRepository implements AllOzonOrdersInManuf
             ->addSelect('order_product.offer')
             ->addSelect('order_product.variation')
             ->addSelect('order_product.modification')
-            ->leftJoin(
+            ->join(
                 'orders',
                 OrderProduct::class,
                 'order_product',
@@ -191,7 +193,7 @@ final class AllOzonOrdersInManufactureRepository implements AllOzonOrdersInManuf
             );
 
         $dbal
-            ->leftJoin(
+            ->join(
                 'order_product',
                 ProductEvent::class,
                 'product_event',
@@ -220,7 +222,7 @@ final class AllOzonOrdersInManufactureRepository implements AllOzonOrdersInManuf
                 'order_product',
                 ProductInfo::class,
                 'product_info',
-                'product_info.product = product_event.main AND product_info.profile = invariable.profile',
+                'product_info.product = product_event.main AND product_info.profile = orders_invariable.profile',
             );
 
         if($this->filter?->getCategory() instanceof CategoryProductUid)
@@ -450,7 +452,6 @@ final class AllOzonOrdersInManufactureRepository implements AllOzonOrdersInManuf
 
         $dbal->allGroupByExclude();
 
-
         /** Открытая производственная партия */
         if($part)
         {
@@ -470,7 +471,7 @@ final class AllOzonOrdersInManufactureRepository implements AllOzonOrdersInManuf
 
             $dbalExist
                 ->select('exist_part_invariable.number')
-                ->leftJoin(
+                ->join(
                     'exist_part',
                     ManufacturePartInvariable::class,
                     'exist_part_invariable',
@@ -478,6 +479,7 @@ final class AllOzonOrdersInManufactureRepository implements AllOzonOrdersInManuf
                 );
 
             $dbalExist->andWhere('exist_product.product = order_product.product');
+            //            $dbalExist->andWhere('exist_product.product = order_product.product');
 
             // $dbalExist->andWhere('(order_product.offer IS NULL OR exist_product.offer = order_product.offer)');
             $dbalExist->andWhere('(CASE 
@@ -540,7 +542,7 @@ final class AllOzonOrdersInManufactureRepository implements AllOzonOrdersInManuf
         }
 
         $dbal
-            ->where('invariable.profile = :profile OR invariable.profile IS NULL')
+            ->where('orders_invariable.profile = :profile OR orders_invariable.profile IS NULL')
             ->setParameter(
                 'profile',
                 $this->profile ?: $this->UserProfileTokenStorage->getProfile(),
@@ -548,38 +550,6 @@ final class AllOzonOrdersInManufactureRepository implements AllOzonOrdersInManuf
             );
 
         $dbal->addOrderBy('order_data');
-
-        /** Сверх наличия на складе */
-        $dbal
-            ->addSelect('(SUM(stock.total) - SUM(stock.reserve)) AS stock_available')
-            ->leftJoin(
-                'product_modification',
-                ProductStockTotal::class,
-                'stock',
-                '
-                    stock.profile = invariable.profile 
-                    AND
-                    stock.product = product_event.main
-                    AND
-                        CASE
-                            WHEN product_offer.const IS NOT NULL THEN stock.offer = product_offer.const
-                            ELSE stock.offer IS NULL
-                        END
-                    AND
-                        CASE
-                            WHEN product_variation.const IS NOT NULL THEN stock.variation = product_variation.const
-                            ELSE stock.variation IS NULL
-                        END
-                    AND
-                        CASE
-                            WHEN product_modification.const IS NOT NULL THEN stock.modification = product_modification.const
-                            ELSE stock.modification IS NULL
-                        END
-                    AND
-                        (stock.total - stock.reserve) > 0
-                        '
-            );
-
 
         if($this->search && $this->search->getQuery())
         {
@@ -592,6 +562,6 @@ final class AllOzonOrdersInManufactureRepository implements AllOzonOrdersInManuf
                 ->addSearchLike('product_trans.name');
         }
 
-        return $this->paginator->fetchAllAssociative($dbal);
+        return $this->paginator->fetchAllHydrate($dbal, AllOzonOrdersInManufactureResult::class);
     }
 }
