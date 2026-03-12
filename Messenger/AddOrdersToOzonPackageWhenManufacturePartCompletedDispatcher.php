@@ -57,7 +57,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 /**
  * Добавляем заказы Ozon в ОТКРЫТУЮ поставку при ВЫПОЛНЕННОЙ производственной парии Ozon Fbs
  */
-// #[Autoconfigure(public: true)]
+#[Autoconfigure(shared: false)]
 #[AsMessageHandler(priority: 10)]
 final readonly class AddOrdersToOzonPackageWhenManufacturePartCompletedDispatcher
 {

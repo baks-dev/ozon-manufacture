@@ -47,7 +47,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 /**
  * Открывает новую поставку OzonSupply при выполнении условий: 1. выполняется завершающий этап производства; 2. заказ имеет доставку Ozon FBS;
  */
-// #[Autoconfigure(public: true)]
+#[Autoconfigure(shared: false)]
 #[AsMessageHandler(priority: 80)]
 final readonly class OpenOzonSupplyWhenManufacturePartCompletedDispatcher
 {
