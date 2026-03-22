@@ -54,8 +54,8 @@ final readonly class OzonOrdersOrderCacheClearHandler
                 'Ошибка очистки кэша модуля ozon-manufacture',
                 [
                     ManufacturePart::class,
-                    self::class.':'.__LINE__
-                ]
+                    self::class.':'.__LINE__,
+                ],
             );
         }
     }

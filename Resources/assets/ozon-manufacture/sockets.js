@@ -36,7 +36,7 @@ setTimeout(function SpgGHaQzun()
         return setTimeout(SpgGHaQzun, eYlcMFxJQ);
     }
 
-    if(window.manufacture_part_event !== 'null')
+    if(window.manufacture_part_event !== "null")
     {
         const ozon_manufacture_part_channel = centrifuge.newSubscription(window.manufacture_part_event);
 
@@ -47,13 +47,13 @@ setTimeout(function SpgGHaQzun()
              * Последний добавленный продукт в производственной партии
              * @note ctx.data.product - блок с html
              * */
-            const lastProduct = document.getElementById('product-' + window.manufacture_part_event);
+            const lastProduct = document.getElementById("product-" + window.manufacture_part_event);
 
             lastProduct.innerHTML = ctx.data.product;
 
             /** Всего продукции в производственной партии */
-            let total = parseInt(document.getElementById('total-' + window.manufacture_part_event).textContent);
-            document.getElementById('total-' + window.manufacture_part_event).textContent = total + ctx.data.total;
+            let total = parseInt(document.getElementById("total-" + window.manufacture_part_event).textContent);
+            document.getElementById("total-" + window.manufacture_part_event).textContent = total + ctx.data.total;
 
         }).subscribe();
     }
@@ -62,7 +62,7 @@ setTimeout(function SpgGHaQzun()
     if(window.current_profile)
     {
 
-        const remove_channel = centrifuge.newSubscription('remove');
+        const remove_channel = centrifuge.newSubscription("remove");
 
         /** Удаляем у всех продукт из списка */
         remove_channel.on("publication", function(ctx)

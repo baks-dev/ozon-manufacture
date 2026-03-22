@@ -149,7 +149,7 @@ final readonly class AddOrdersToOzonPackageWhenManufacturePartCompletedDispatche
         {
             $this->logger->warning(
                 'ozon-manufacture: продукция в производственной партии не найдена',
-                [ManufacturePartDTO::class, self::class.':'.__LINE__]
+                [ManufacturePartDTO::class, self::class.':'.__LINE__],
             );
 
             return true;
@@ -159,6 +159,7 @@ final readonly class AddOrdersToOzonPackageWhenManufacturePartCompletedDispatche
          * Продукты в производственной партии
          *
          * Добавляем все заказы Ozon FBS со статусом «На упаковке» в ОТКРЫТУЮ системную поставку OzonSupply
+         *
          * @var ManufacturePartProductsDTO $ManufacturePartProductsDTO
          */
         foreach($ManufacturePartDTO->getProduct() as $ManufacturePartProductsDTO)
@@ -168,7 +169,7 @@ final readonly class AddOrdersToOzonPackageWhenManufacturePartCompletedDispatche
             {
                 $this->logger->critical(
                     'ozon-manufacture: заказы в производственной партии не найдены',
-                    [ManufacturePartProductsDTO::class, self::class.':'.__LINE__]
+                    [ManufacturePartProductsDTO::class, self::class.':'.__LINE__],
                 );
 
                 continue;
@@ -187,7 +188,7 @@ final readonly class AddOrdersToOzonPackageWhenManufacturePartCompletedDispatche
             {
                 $this->logger->critical(
                     sprintf('ozon-manufacture: Открытая поставка не найдена: OzonSupplyUid %s ', $OzonSupplyUid),
-                    [$message, self::class.':'.__LINE__]
+                    [$message, self::class.':'.__LINE__],
                 );
 
                 return false;
@@ -199,6 +200,7 @@ final readonly class AddOrdersToOzonPackageWhenManufacturePartCompletedDispatche
 
             /**
              * Заказы на продукт
+             *
              * @var ManufacturePartProductOrderDTO $ManufacturePartProductOrderDTO
              */
             foreach($ManufacturePartProductsDTO->getOrd() as $ManufacturePartProductOrderDTO)
@@ -213,7 +215,7 @@ final readonly class AddOrdersToOzonPackageWhenManufacturePartCompletedDispatche
                 {
                     $this->logger->critical(
                         'ozon-manufacture: не найдено активное событие заказа',
-                        [self::class.':'.__LINE__, $ManufacturePartProductOrderDTO->getOrd()]
+                        [self::class.':'.__LINE__, $ManufacturePartProductOrderDTO->getOrd()],
                     );
 
                     continue;
@@ -281,7 +283,7 @@ final readonly class AddOrdersToOzonPackageWhenManufacturePartCompletedDispatche
                         {
                             $this->logger->critical(
                                 sprintf('ozon-manufacture: Ошибка %s при сохранении упаковки', $ozonPackage),
-                                [$message, self::class.':'.__LINE__]
+                                [$message, self::class.':'.__LINE__],
                             );
 
                             return false;
@@ -291,8 +293,8 @@ final readonly class AddOrdersToOzonPackageWhenManufacturePartCompletedDispatche
                             'Добавили OzonPackage упаковку в поставку OzonSupply',
                             [
                                 $ozonPackage, $OzonSupplyUid,
-                                self::class.':'.__LINE__
-                            ]
+                                self::class.':'.__LINE__,
+                            ],
                         );
                     }
                 }
@@ -316,7 +318,7 @@ final readonly class AddOrdersToOzonPackageWhenManufacturePartCompletedDispatche
             {
                 $this->logger->critical(
                     sprintf('ozon-manufacture: Ошибка %s при сохранении упаковки', $ozonPackage),
-                    [$message, self::class.':'.__LINE__]
+                    [$message, self::class.':'.__LINE__],
                 );
 
                 return false;
@@ -326,8 +328,8 @@ final readonly class AddOrdersToOzonPackageWhenManufacturePartCompletedDispatche
                 'Добавили OzonPackage упаковку в поставку OzonSupply',
                 [
                     $ozonPackage, $OzonSupplyUid,
-                    self::class.':'.__LINE__
-                ]
+                    self::class.':'.__LINE__,
+                ],
             );
         }
 

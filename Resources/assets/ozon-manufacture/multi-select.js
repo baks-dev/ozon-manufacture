@@ -38,7 +38,8 @@ select_all_to_production?.addEventListener("click", function()
         select_all_to_production.innerText = "Снять выбор";
         select_all_to_production.classList.remove("btn-outline-primary");
         select_all_to_production.classList.add("btn-primary");
-    } else
+    }
+    else
     {
         select_all_to_production.innerText = "Выбрать все";
         select_all_to_production.classList.add("btn-outline-primary");
@@ -61,7 +62,8 @@ select_all_to_production?.addEventListener("click", function()
     if(atLeastOneChecked)
     {
         add_all_to_production.classList.remove("d-none");
-    } else
+    }
+    else
     {
         add_all_to_production.classList.add("d-none");
     }
@@ -83,7 +85,8 @@ for(checkbox_all_to_production of checkboxs_all_to_production)
         if(atLeastOneChecked)
         {
             add_all_to_production.classList.remove("d-none");
-        } else
+        }
+        else
         {
             add_all_to_production.classList.add("d-none");
         }

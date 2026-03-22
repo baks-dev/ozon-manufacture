@@ -31,7 +31,7 @@ return static function(TwigConfig $twig) {
 
     $twig->path(
         BaksDevOzonManufactureBundle::PATH.implode(DIRECTORY_SEPARATOR, ['Resources', 'view', '']),
-        'ozon-manufacture'
+        'ozon-manufacture',
     );
 
 };

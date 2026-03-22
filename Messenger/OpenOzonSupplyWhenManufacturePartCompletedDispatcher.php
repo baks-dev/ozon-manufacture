@@ -45,7 +45,8 @@ use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
- * Открывает новую поставку OzonSupply при выполнении условий: 1. выполняется завершающий этап производства; 2. заказ имеет доставку Ozon FBS;
+ * Открывает новую поставку OzonSupply при выполнении условий: 1. выполняется завершающий этап производства; 2. заказ
+ * имеет доставку Ozon FBS;
  */
 #[Autoconfigure(shared: false)]
 #[AsMessageHandler(priority: 80)]
@@ -138,7 +139,7 @@ final readonly class OpenOzonSupplyWhenManufacturePartCompletedDispatcher
         {
             $this->Logger->critical(
                 'ozon-manufacture: Ошибка при открытии новой поставки при завершающем этапе производства Ozon FBS',
-                [$OzonSupply, self::class.':'.__LINE__]
+                [$OzonSupply, self::class.':'.__LINE__],
             );
 
             return;
@@ -148,8 +149,8 @@ final readonly class OpenOzonSupplyWhenManufacturePartCompletedDispatcher
             sprintf('%s Открыта новая поставка Ozon', $OzonSupplyNewDTO->getIdentifier()->getIdentifier()),
             [
                 var_export($OzonSupply, true),
-                self::class.':'.__LINE__
-            ]
+                self::class.':'.__LINE__,
+            ],
         );
 
         $Deduplicator->save();

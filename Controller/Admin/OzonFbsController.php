@@ -63,7 +63,7 @@ final class OzonFbsController extends AbstractController
             ->createForm(
                 type: SearchForm::class,
                 data: $search = new SearchDTO(),
-                options: ['action' => $this->generateUrl('ozon-manufacture:admin.fbs'),]
+                options: ['action' => $this->generateUrl('ozon-manufacture:admin.fbs'),],
             )
             ->handleRequest($request);
 
@@ -90,7 +90,7 @@ final class OzonFbsController extends AbstractController
             ->createForm(
                 type: ProductFilterForm::class,
                 data: $filter,
-                options: ['action' => $this->generateUrl('ozon-manufacture:admin.fbs')]
+                options: ['action' => $this->generateUrl('ozon-manufacture:admin.fbs')],
             )
             ->handleRequest($request);
 
@@ -111,7 +111,7 @@ final class OzonFbsController extends AbstractController
                 'filter' => $filterForm->createView(),
                 'token' => $tokenUserGenerator->generate($this->getUsr()),
                 'add_selected_product_form_name' => $this->createForm(type: ManufactureSelectionPartProductsForm::class)->getName(),
-            ]
+            ],
         );
     }
 }

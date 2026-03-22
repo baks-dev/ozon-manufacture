@@ -205,17 +205,6 @@ final class AllOzonOrdersInManufactureRepository implements AllOzonOrdersInManuf
             $dbal->andWhereNotExists(ProductMaterial::class, 'tmp', 'tmp.event = order_product.product');
         }
 
-        // @TODO нет статистики
-        //        $dbal
-        //            ->addSelect('wb_orders_statistics.analog')
-        //            ->addSelect('wb_orders_statistics.alarm')
-        //            ->leftJoin(
-        //                'product_event',
-        //                WbOrdersStatistics::class,
-        //                'wb_orders_statistics',
-        //                'wb_orders_statistics.product = product_event.main',
-        //            );
-
         $dbal
             ->addSelect('product_info.article AS card_article')
             ->leftJoin(

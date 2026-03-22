@@ -41,6 +41,16 @@ final class Role implements RoleInterface, MenuAdminInterface
     public const string KEY = 'JNuiTEjXt';
 
     /**
+     * Метод возвращает позицию, в которую располагается ссылка в секции меню.
+     *
+     * @see BaksDevOzonBundle
+     */
+    public static function getSortMenu(): int
+    {
+        return 452;
+    }
+
+    /**
      * Добавляем раздел в меню администрирования.
      */
     public function getRole(): string
@@ -76,15 +86,6 @@ final class Role implements RoleInterface, MenuAdminInterface
     public function getModal(): bool
     {
         return false;
-    }
-
-    /**
-     * Метод возвращает позицию, в которую располагается ссылка в секции меню.
-     * @see BaksDevOzonBundle
-     */
-    public static function getSortMenu(): int
-    {
-        return 452;
     }
 
     /**
