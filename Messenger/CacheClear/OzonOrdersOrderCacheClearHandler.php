@@ -30,6 +30,7 @@ use BaksDev\Core\Cache\AppCacheInterface;
 use BaksDev\Manufacture\Part\Entity\ManufacturePart;
 use BaksDev\Orders\Order\Messenger\OrderMessage;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
@@ -37,6 +38,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
  * Сбрасывает кэш модуля ozon-manufacture
  */
 #[AsMessageHandler(priority: -100)]
+#[Autoconfigure(shared: false)]
 final readonly class OzonOrdersOrderCacheClearHandler
 {
     public function __construct(
